@@ -15,6 +15,10 @@ os.getenv("GOOGLE_API_KEY")
 genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 
 
+
+
+
+
 def get_pdf_text(pdf_docs):
     text=""
     for pdf in pdf_docs:
@@ -49,7 +53,7 @@ def get_conversational_chain():
     """
 
     model = ChatGoogleGenerativeAI(model="gemini-pro",
-                             temperature=0.5)
+                             temperature=0.3)
 
     prompt = PromptTemplate(template = prompt_template, input_variables = ["context", "question"])
     chain = load_qa_chain(model, chain_type="stuff", prompt=prompt)
@@ -61,7 +65,7 @@ def get_conversational_chain():
 def user_input(user_question):
     embeddings = GoogleGenerativeAIEmbeddings(model = "models/embedding-001")
     
-    new_db = FAISS.load_local("faiss_index", embeddings,allow_dangerous_deserialization=True)
+    new_db = FAISS.load_local("faiss_index", embeddings)
     docs = new_db.similarity_search(user_question)
 
     chain = get_conversational_chain()
